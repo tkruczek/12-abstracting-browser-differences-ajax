@@ -1,4 +1,4 @@
-/*global TestCase: false */
+/*global TestCase: false, tddjs:false, assertNumber:false, assert: false */
 
 TestCase('AjaxCreateTest', {
    "test should return XMLHttpRequest object": function () {
