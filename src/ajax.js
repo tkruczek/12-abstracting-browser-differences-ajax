@@ -2,16 +2,15 @@
 (function () {
   var xhr;
   var ajax = tddjs.namespace('ajax');
-  var options = [
-    function () {
-      return new ActiveXObject('Microsoft.XMLHTTP');
-    },
-    
-    function () {
-      return new XMLHttpRequest();
-    }
-  ];
   
+  function xhrActiveXObject() {
+    return new ActiveXObject('MSXML2.XMLHTTP.3.0');
+  }
+  
+  function xhrXMLHttpRequest() {
+    return new XMLHttpRequest();
+  }
+  var options = [xhrActiveXObject,  xhrXMLHttpRequest];
   
   for (var i = 0, l = options.length; i < l; i++) {
     try {
@@ -26,4 +25,9 @@
       }
     } catch (e) {}
   }
+  
+  
 }());
+
+ 
+
