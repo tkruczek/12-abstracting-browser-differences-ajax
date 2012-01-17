@@ -1,4 +1,4 @@
-/*global TestCase:false, tddjs:false, assertFunction, assertEquals, assertException, assert, stubFn, fakeXMLHttpRequest */
+/*global TestCase:false, tddjs:false, assertNull, assertFunction, assertEquals, assertNoException, assertException, assert, stubFn, fakeXMLHttpRequest */
 (function () {
   var ajax = tddjs.ajax;
   
@@ -39,6 +39,41 @@
       ajax.get('/url');
       
       assert(this.xhr.send.called);
+    },
+    'test should pass null as argument to send': function () {
+      ajax.get('/url');
+      
+      assertNull(this.xhr.send.args[0]);
+    }
+  });
+  TestCase('ReadyStateHandlerTest', {
+    setUp: function () {
+      this.ajaxCreate = ajax.create;
+      this.xhr = Object.create(fakeXMLHttpRequest);
+      ajax.create = stubFn(this.xhr);
+    },
+    tearDown: function () {
+      ajax.create = this.ajaxCreate;
+    },
+    'test should call success handler for status 200' : function () {
+      this.xhr.readyState = 4;
+      this.xhr.status = 200;
+      var success = stubFn();
+      
+      ajax.get('/url', {success: success});
+      this.xhr.onreadystatechange();
+      
+      assert(success.called);
+    },
+    'test should not throw error without success handler': function () {
+      this.xhr.readyState = 4;
+      this.xhr.status = 200;
+      
+      ajax.get('/url');
+      
+      assertNoException(function () {
+        this.xhr.onreadystatechange();
+      }.bind(this));
     }
   });
 }());
